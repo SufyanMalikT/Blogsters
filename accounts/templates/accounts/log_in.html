@@ -1,0 +1,25 @@
+{% extends 'accounts/base.html'%}
+
+
+{% block title %}Log In{% endblock %}
+{% block content %}
+<div class=" text-white w-full md:w-fit h-fit dark:bg-gray-900 py-8 px-8 space-y-8 flex flex-col justify-center items-center rounded-lg">
+    <h1 class="text-5xl  font-bold">Log In</h1>
+    <form method="post" class="flex flex-col space-y-12 items-center">
+        {% csrf_token %}
+        <label for="username" class="display-block" class ="">Username:
+        <input  class = " bg-gray-700 border text-xl py-2 px-2 block w-xs sm:w-sm md:w-md lg:w-xl" type="text" id="password" name="username" placeholder="Username" class="display-inline"></label>
+        <label for="password">Password:
+        <input  class = " bg-gray-700 border text-xl py-2 px-2 block w-xs sm:w-sm md:w-md lg:w-xl" type="password" name="password" id="password" placeholder="Password"></label>
+        <button type="submit" class ="w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Log In</button>
+        {% if form.errors %}
+            <p class="error">{{ form.errors }}</p>
+        {% endif %}
+    </form>
+{% if messages %}
+  {% for message in messages %}
+    <div class="text-red-500">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

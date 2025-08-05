@@ -1,0 +1,69 @@
+{% extends "blog/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-20 px-6 text-center dark:bg-gradient-to-r dark:from-gray-900 dark:to-gray-700">
+  <h1 class="text-5xl font-extrabold mb-4">About This Blog</h1>
+  <p class="max-w-2xl mx-auto text-lg md:text-xl">
+    A simple and practical blog built with Django and Tailwind CSS — created to share my learning journey and tips with fellow developers.
+  </p>
+</div>
+
+<!-- Who I Am -->
+<div class="bg-white py-16 px-6 dark:bg-gray-700 dark:text-white">
+  <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-800 mb-4 dark:text-white">Who Am I?</h2>
+      <p class="text-gray-600 leading-relaxed dark:text-gray-100">
+        Hey! I’m <strong>Sufyan</strong>, a CS student passionate about web development. I built this blog to document what I learn while building real projects using Django.
+      </p>
+      <p class="text-gray-600 mt-4 dark:text-gray-100">
+        From setting up models to styling with Tailwind CSS, every post here is written to help beginners like me understand things faster and better.
+      </p>
+    </div>
+    <div>
+      <img src="{% static 'blog/img/coding.jpg'%}" alt="Coding"
+        class="rounded-2xl shadow-lg w-full h-80 object-cover">
+    </div>
+  </div>
+</div>
+
+<!-- What This Blog Covers -->
+<div class="bg-gray-100 py-16 px-6 dark:bg-gray-700">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 class="text-3xl font-bold text-gray-800 mb-8 dark:text-white">What This Blog Covers</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white shadow p-6 rounded-xl dark:bg-gray-900">
+        <h3 class="text-xl font-semibold text-purple-600 mb-2">Django</h3>
+        <p class="text-gray-600 text-sm dark:text-gray-100">Building blog apps, models, forms, authentication, and deploying Django projects step-by-step.</p>
+      </div>
+      <div class="bg-white shadow p-6 rounded-xl dark:bg-gray-900">
+        <h3 class="text-xl font-semibold text-purple-600 mb-2">Tailwind CSS</h3>
+        <p class="text-gray-600 text-sm dark:text-gray-100">Designing responsive, modern UIs using utility-first classes with Tailwind CSS.</p>
+      </div>
+      <div class="bg-white shadow p-6 rounded-xl dark:bg-gray-900">
+        <h3 class="text-xl font-semibold text-purple-600 mb-2">Version Control</h3>
+        <p class="text-gray-600 text-sm dark:text-gray-100">Using Git & GitHub for version control, pushing projects live, and understanding commits.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tech Stack -->
+<div class="bg-white py-16 px-6 dark:bg-gray-700 ">
+  <div class="max-w-4xl mx-auto text-center ">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 dark:text-white">Tech Stack I Use</h2>
+    <div class="flex flex-wrap justify-center gap-6 text-purple-600 font-semibold text-lg ">
+      <span class="bg-purple-50 px-4 py-2 rounded-full shadow dark:bg-gray-900 ">Django</span>
+      <span class="bg-purple-50 px-4 py-2 rounded-full shadow dark:bg-gray-900 ">Tailwind CSS</span>
+      <span class="bg-purple-50 px-4 py-2 rounded-full shadow dark:bg-gray-900 ">SQLite</span>
+      <span class="bg-purple-50 px-4 py-2 rounded-full shadow dark:bg-gray-900 ">Git & GitHub</span>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

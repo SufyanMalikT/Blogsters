@@ -1,0 +1,17 @@
+{% block sidebar %}
+
+<div class="sidebar fixed h-full w-3xs bg-gray-950 flex flex-col items-center justify-evenly hidden md:flex">
+    <h1 class="text-4xl justify-self-center text-white">Authors</h1>
+    <div class="h-lg-max authors-list w-full flex flex-col gap-2 items-center justify-center overflow-y-scroll ">
+        {% if authors %}
+        <p class="text-white">Total Authors: {{ authors|length }}</p>
+        {% else %}
+        <p class="text-white">No authors available</p>
+        {% endif %}
+        {% for author in authors %}
+        <p class=" text-lg text-white cursor-pointer py-2 hover:bg-gray-900 w-full flex flex-col items-center">{{author.username}}</p>
+        {% endfor%}
+    </div>
+
+</div>
+{% endblock %}

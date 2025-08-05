@@ -1,0 +1,84 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- Top Bar -->
+<div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-16 shadow-lg"></div>
+
+<!-- Header -->
+{% include "blog/comps/tableheader.html" %}
+
+<!-- Blog Categories -->
+<div class="w-full px-4 py-6 bg-gray-50 dark:bg-gray-700">
+    <div class="max-w-7xl mx-auto flex flex-col gap-12">
+
+        {% for blog_by_category in blogs_by_categories %}
+        {% if blog_by_category.blogs_chunk %}
+        <div class="category-block bg-white rounded-2xl shadow-md p-6 border border-blue-100 dark:bg-gray-800 dark:border-gray-800">
+            <!-- Category Title -->
+            <h2 class="text-4xl font-extrabold text-center text-blue-700 dark:text-white">{{ blog_by_category.category }}</h2>
+            <hr class="my-4 border-blue-500 dark:border-gray-100">
+
+            <!-- Blog Chunks -->
+            <div class="blogs_chunks space-y-12">
+                {% for blogs in blog_by_category.blogs_chunk %}
+                <div class="hidden grid gap-8 sm:grid-cols-2 lg:grid-cols-3 transition-all duration-500 ">
+                    {% for blog in blogs %}
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 dark:bg-gray-900 ">
+                        {% if blog.img %}
+                        <img src="{{ blog.img.url }}" alt="Blog Image"
+                            class="w-full h-48 sm:h-56 object-cover">
+                        {% else %}
+                        <img src="{% static 'blog/img/default.jpg' %}" alt="Default"
+                            class="w-full h-48 sm:h-56 object-cover">
+                        {% endif %}
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 dark:text-white">{{ blog.title }}</h3>
+                            <p class="text-gray-600 text-sm mb-4 dark:text-gray-100">{{ blog.sub_title }}</p>
+                            <a href="{% url 'blog_details' slug=blog.slug %}"
+                                class="inline-block text-blue-600 font-semibold hover:underline">Read More →</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+            </div>
+
+            <!-- Chunk Navigation Buttons -->
+            <div class="flex justify-center items-center mt-6">
+                <div class="flex space-x-2">
+                    {% for chunk in blog_by_category.blogs_chunk %}
+                    <button
+                        class="chunk-button bg-blue-100 text-blue-700 font-medium px-4 py-1 rounded-md hover:bg-blue-200 transition duration-200 dark:bg-gray-600 dark:text-white cursor-pointer">{{ forloop.counter }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <p class="text-center text-gray-500">No categories available.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    document.querySelectorAll(".blogs_chunks").forEach((container) => {
+        const chunks = container.querySelectorAll(":scope > div");
+        const buttonsContainer = container.nextElementSibling;
+        const buttons = buttonsContainer.querySelectorAll(".chunk-button");
+
+        if (chunks.length > 0) chunks[0].classList.remove("hidden");
+
+        buttons.forEach((btn, index) => {
+            btn.addEventListener("click", () => {
+                chunks.forEach(c => c.classList.add("hidden"));
+                chunks[index].classList.remove("hidden");
+            });
+        });
+    });
+</script>
+
+{% endblock %}

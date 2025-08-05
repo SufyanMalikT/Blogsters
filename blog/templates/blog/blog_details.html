@@ -1,0 +1,66 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}{{blog.title}}{% endblock %}
+
+{% block header %} 
+<link rel="stylesheet" href="{% static 'blog/css/blog-details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="blog-details flex flex-col items-start md:items-center pt-32 dark:bg-gray-800 dark:text-white">
+    <h1 class="text-5xl font-bold">{{ blog.title }}</h1>
+    <p class="text-gray-500 text-lg mt-2">
+        Published by 
+        <span class="bg-gray-300 rounded-lg px-1">{{ blog.author.username }}</span> 
+        on {{ blog.created_at|date:"F j, Y" }}
+    </p>
+    <div class="w-fit h-fit mx-2 md:mx-30 pt-10 text-2xl self-center bg-gray-100 dark:bg-gray-700 rounded-3xl py-1 px-1">
+        <p class="px-4 pb-4">{{ blog.content }}</p>
+    </div>
+</div>
+
+<hr class="my-10 bg-white dark:bg-gray-800 dark:text-gray-700">
+{% if user.is_authenticated %}
+<div class="leave_comment flex flex-col items-center mt-10 dark:bg-gray-800 dark:text-white ">
+    <h1 class="text-5xl md:text-5xl font-bold">Leave a Comment</h1>
+    <form method="POST" class="comment-form">
+        {% csrf_token %}
+        {{ commentform.as_p }}
+        <button type="submit"
+            class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Post
+        </button>
+    </form>
+</div>
+{% else %}
+<h1 class="text-3xl bold md:ml-70">Log In or Sign Up in order to leave comments on posts.</h1>
+{% endif %}
+<hr class="my-10">
+
+<div class="comments flex flex-col items-center mb-10">
+    <h1 class="text-5xl md:text-3xl font-bold">Comments</h1>
+    <div class="comments-list w-full max-w-2xl mt-6">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment bg-gray-100 p-4 mb-4 rounded-lg shadow-md">
+                    {% if blog.author.username == comment.author.username %}
+                        <h3 class="text-2xl md:text-lg font-semibold">
+                            <span class="bg-gray-300 px-1 rounded-lg py-1">{{ comment.author.username }}</span> 
+                            <span class="text-lg md:text-sm text-gray-500">{{ comment.created_at|timesince }} ago</span>
+                        </h3>
+                    {% else %}
+                        <h3 class="text-2xl md:text-lg font-semibold">
+                            {{ comment.author.username }} 
+                            <span class="text-lg md:text-sm text-gray-500">{{ comment.created_at|timesince }} ago</span>
+                        </h3>
+                    {% endif %}
+                    <p class="mt-2 text-xl md:text-lg">{{ comment.content }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-gray-500 self-center text-3xl md:text-xl md:ml-30">No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

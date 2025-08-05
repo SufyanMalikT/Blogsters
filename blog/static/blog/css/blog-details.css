@@ -1,0 +1,11 @@
+
+.comment-form > p > label{
+    font-size: 32px;
+}
+
+@media (max-width: 768px) {
+    .comment-form > p > label {
+        font-size: 24px;
+    }
+    
+}
