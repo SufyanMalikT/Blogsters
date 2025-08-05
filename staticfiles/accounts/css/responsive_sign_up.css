@@ -1,0 +1,5 @@
+.sign_up_form > p{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
