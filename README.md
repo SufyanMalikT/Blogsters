@@ -1,6 +1,6 @@
 # 📝 Blogsters
 
-**Blogsters** is a simple, full-stack blogging platform built with **Django**. It allows users to register, log in, create blog posts, and view posts from others. Ideal for learning how modern web applications are structured using Python and Django.
+**Blogsters** is a full-stack blogging platform built with **Django**, featuring user authentication, post creation, and a clean UI. It is deployed using [Railway](https://railway.app/), making it easy to scale and manage.
 
 ---
 
@@ -9,9 +9,16 @@
 - ✅ User authentication (signup, login, logout)
 - 📝 Create, edit, and delete blog posts
 - 📄 View blog posts by all users
-- 🎨 Basic front-end with HTML, CSS, and JavaScript
-- 🗄️ SQLite for local database storage
-- 🌐 Deployment-ready with `Procfile`
+- 🎨 Simple, responsive frontend (HTML, CSS, JavaScript)
+- 🗄️ SQLite (for development) – can be upgraded to PostgreSQL
+- 🌐 Live deployment via Railway
+
+---
+
+## 🌐 Live Demo
+
+🔗 [Visit the Live Site](https://blogsters.up.railway.app/)  
+> Replace the above URL with your actual deployed app link.
 
 ---
 
@@ -19,8 +26,8 @@
 
 - **Backend:** Django (Python)
 - **Frontend:** HTML, CSS, JavaScript
-- **Database:** SQLite (default Django DB)
-- **Deployment:** Heroku-ready (via `Procfile`)
+- **Database:** SQLite (local) / Railway-managed (e.g. PostgreSQL)
+- **Deployment:** [Railway](https://railway.app/)
 
 ---
 
@@ -28,11 +35,11 @@
 
 ```bash
 Blogsters/
-├── accounts/          # Handles user registration and login
-├── blog/              # Blog post models, views, templates
-├── staticfiles/       # Static assets (CSS, JS)
-├── db.sqlite3         # Local database
+├── accounts/          # User authentication
+├── blog/              # Blog logic and post management
+├── staticfiles/       # CSS, JavaScript, static assets
+├── db.sqlite3         # Local development database
 ├── manage.py          # Django management script
-├── requirements.txt   # Python dependencies
-├── Procfile           # For deployment
+├── requirements.txt   # Dependencies
+├── Procfile           # WSGI entry point for deployment
 └── .gitignore
