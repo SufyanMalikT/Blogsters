@@ -12,11 +12,11 @@
     <h1 class="text-5xl font-bold">{{ blog.title }}</h1>
     <p class="text-gray-500 text-lg mt-2">
         Published by 
-        <span class="bg-gray-300 rounded-lg px-1">{{ blog.author.username }}</span> 
+        <a href="{% url 'blog_profile' username=blog.author.username %}"class="bg-gray-300 rounded-lg px-1">{{ blog.author.username }}</a> 
         on {{ blog.created_at|date:"F j, Y" }}
     </p>
-    <div class="w-fit h-fit mx-2 md:mx-30 pt-10 text-2xl self-center bg-gray-100 dark:bg-gray-700 rounded-3xl py-1 px-1">
-        <p class="px-4 pb-4">{{ blog.content }}</p>
+    <div class="w-fit h-fit px-4 pb-4 mt-10 mx-2 md:mx-30 pt-4 text-2xl self-center bg-gray-100 dark:bg-gray-700 rounded-3xl py-1 px-1">
+        <p class="">{{ blog.content|linebreaks }}</p>
     </div>
 </div>
 
@@ -43,15 +43,15 @@
     <div class="comments-list w-full max-w-2xl mt-6">
         {% if comments %}
             {% for comment in comments %}
-                <div class="comment bg-gray-100 p-4 mb-4 rounded-lg shadow-md">
+                <div class="comment bg-gray-100 dark:bg-gray-900 p-4 mb-4 rounded-lg shadow-md ">
                     {% if blog.author.username == comment.author.username %}
                         <h3 class="text-2xl md:text-lg font-semibold">
-                            <span class="bg-gray-300 px-1 rounded-lg py-1">{{ comment.author.username }}</span> 
+                            <a href="{% url 'blog_profile' username=comment.author.username %}" class="bg-gray-300 dark:bg-gray-700 px-1 rounded-3xl py-1">{{ comment.author.username }}</a> 
                             <span class="text-lg md:text-sm text-gray-500">{{ comment.created_at|timesince }} ago</span>
                         </h3>
                     {% else %}
                         <h3 class="text-2xl md:text-lg font-semibold">
-                            {{ comment.author.username }} 
+                            <a href="{% url 'blog_profile' username=comment.author.username %}">{{ comment.author.username }}</a> 
                             <span class="text-lg md:text-sm text-gray-500">{{ comment.created_at|timesince }} ago</span>
                         </h3>
                     {% endif %}

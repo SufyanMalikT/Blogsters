@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 
 
 class UserCreationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-sm md:w-lg py-2 px-2'}))
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-sm md:w-lg py-2 px-2'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-xs sm:w-sm md:w-lg py-2 px-2', 'placeholder': 'Password'}))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-xs sm:w-sm md:w-lg py-2 px-2', 'placeholder': 'Confirm Password'}))
 
     class Meta:
         model = User
         fields = ['username','email', 'password']
         widgets = {
-            'username':forms.TextInput(attrs={'class':' block bg-gray-700 border text-sm md:text-xl w-sm md:w-lg py-2 px-2'}),
-            'email':forms.EmailInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-sm md:w-lg py-2 px-2', 'placeholder': 'Email'}),
+            'username':forms.TextInput(attrs={'class':' block bg-gray-700 border text-sm md:text-xl w-xs sm:w-sm md:w-lg py-2 px-2', 'placeholder': 'Username'}),
+            'email':forms.EmailInput(attrs={'class':'block bg-gray-700 border text-sm md:text-xl w-xs sm:w-sm md:w-lg py-2 px-2', 'placeholder': 'Email'}),
         }
 
     def clean(self):

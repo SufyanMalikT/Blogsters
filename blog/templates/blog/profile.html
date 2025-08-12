@@ -1,0 +1,227 @@
+{% extends 'blog/base.html' %}  {# Extend the base template so we keep the common header/footer #}
+{% load static %}               {# Load Django's static files tag #}
+
+{% block content %}
+
+<!-- Top Bar (Gradient) -->
+<div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-16 shadow-lg"></div>
+
+<!-- Profile Page Container -->
+<div class="profile-page md:mt-10 flex flex-col w-full h-full justify-center items-center mb-20">
+    <div class="profile-div w-full max-w-5xl">  {# Center content with a max-width for better readability #}
+        
+        <!-- User Details Section -->
+        <section class="user-details px-5 sm:px-10 pt-20 flex flex-col justify-center items-center md:mt-10 md:border dark:border-none border-gray-200 md:rounded-2xl shadow-md bg-gradient-to-r from-blue-400 to-yellow-500 dark:from-gray-700 dark:to-gray-900 transition-all duration-300">
+            
+            <!-- Profile Picture -->
+            {% if user == profile_user%}
+                <p class="text-red-500 my-2">&excl; Tap on the profile picture to change it</p>
+            {% endif %}
+            <div class="profpic h-28 w-28 rounded-full overflow-hidden shadow-lg border-4 border-white relative cursor-pointer">
+
+                {% if profilepic %}
+                    <img id="profilePreview" src="{{ profilepic.img.url }}" class="object-cover h-full w-full cursor-pointer">
+                {% else %}
+                    <img id="profilePreview" src="{% static 'blog/img/default-avatar.jpg' %}" class="object-cover h-full w-full cursor-pointer">
+                {% endif %}
+                {% if request.user == profile_user%}
+                    <form method="POST" enctype="multipart/form-data" class="absolute inset-0">
+                        {% csrf_token %}
+                        {{ form.img}}
+                    </form>
+                {% endif %}
+            </div>
+
+
+            <!-- Username -->
+            <h1 class="text-3xl font-bold text-black dark:text-white mt-4">@{{profile_user.username}}</h1>
+
+            <!-- Bio -->
+            <p class="text-black dark:text-white">{{bio.bio}}</p>
+
+            <!-- Divider -->
+            <hr class="text-gray-300 dark:text-white w-full mt-6">
+
+            <!-- Option Bar -->
+            <ul class="opt-bar w-full flex flex-row justify-center gap-6 mt-4">
+                <li class="px-4 py-1 text-lg dark:text-white hover:bg-gray-300 hover:rounded-md cursor-pointer border-b-2 border-transparent">Blogs</li>
+                <li class="px-4 py-1 text-lg dark:text-white hover:bg-gray-300 hover:rounded-md cursor-pointer border-b-2 border-transparent">About</li>
+                <li class="px-4 py-1 text-lg dark:text-white hover:bg-gray-300 hover:rounded-md cursor-pointer border-b-2 border-transparent">User Info</li>
+            </ul>
+        </section>
+
+        <!-- Content Section -->
+        <section class="sec2 md:border border-gray-200 dark:border-none rounded-b-2xl shadow-md overflow-hidden">
+            
+            <!-- Blogs List -->
+            <div class="users-blogs w-full dark:bg-gray-900 p-4">
+                <hr class="w-full mb-4">
+
+                {% for blog in blogs_by_author %}
+                    <div class="h-fit flex flex-col md:flex-row gap-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+                        
+                        <!-- Blog Image -->
+                        <div class="blog-img flex-shrink-0">
+                            {% if blog.img %}
+                                <img src="{{ blog.img.url }}" class="rounded-lg object-cover w-full md:w-40 h-auto md:h-28 shadow-md">
+                            {% else %}
+                                <img src="{% static 'blog/img/default.jpg' %}" class="rounded-lg object-cover w-full md:w-40 h-auto md:h-28 shadow-md">
+                            {% endif %}
+                        </div>
+
+                        <!-- Blog Text Content -->
+                        <div class="flex flex-col justify-between">
+                            <div>
+                                <div class="flex flex-col md:flex-row  justify-start md:items-center gap-2">
+                                    <h3 class="text-xl font-bold dark:text-white">{{ blog.title }}</h3>
+                                    <span class="text-sm dark:text-gray-400">{{ blog.created_at|date:"F j, Y" }}</span>
+                                </div>
+                                <p class="text-gray-900 dark:text-gray-100 mt-1">{{ blog.sub_title }}</p>
+                            </div>
+                            <a href="{% url 'blog_details' slug=blog.slug %}" class="text-blue-500 underline mt-2">Read More...</a>
+                        </div>
+                    </div>
+                    <hr class="text-gray-300 my-3">
+
+                {% empty %}
+                    <h1 class="text-center text-gray-500 dark:text-gray-300 py-6">The user has no blogs yet.</h1>
+                {% endfor %}
+            </div>
+
+
+            <!-- About Section -->
+            <div class="UserInfo-sec hidden user-info h-20 w-full p-4 dark:text-white">
+                <p>Basic user information such as email, join date, etc., will go here.</p>
+            </div>
+
+
+            <!-- User Info Section -->
+            <div class="About-sec hidden flex flex-col  h-fit w-full p-4 dark:text-white">
+                {% if request.user == profile_user %}
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+                    User Information
+                </h2>
+                <form method="post" class="user_info_form flex flex-col self-center gap-8 bg-gradient-to-r from-blue-50 to-white dark:from-gray-900 dark:to-gray-950 w-fit p-4 rounded-xl">
+                    {% csrf_token%}
+                    <label for="first_name">First Name:
+                        <input type="text" name="first_name" id="first_name" value="{{profile_user.first_name}}" class="border-b-1 pl-6 border-gray-300 dark:border-white  focus:outline-none">
+                    </label>
+
+                    <label for="last_name">Last Name:
+                        <input type="text" name="last_name" id="last_name" value="{{profile_user.last_name}}" class="border-b-1 pl-6 border-gray-300 dark:border-white focus:outline-none ">
+                    </label>
+                    <label for="email">Email:
+                        <input type="text" name="email" id="email" value="{{profile_user.email}}" class="border-b-1 px-6 border-gray-300 dark:border-white w-fit w-md focus:outline-none ">
+                    </label>
+                    <div class="flex flex-row"><label for="bio">Bio:</label>
+                        <textarea 
+                                name="bio" 
+                                id="bio"
+                                cols="50"
+                                rows="6" 
+                                class="w-fit p-3 rounded-md border border-gray-300 focus:outline-none  dark:border-gray-600 dark:bg-gray-800 dark:text-white resize-y"
+                            >{{ bio.bio }}</textarea>
+                    </div>
+                    <div  class="flex flex-row w-full gap-4">
+                        <button type="reset" class="hidden w-fit cursor-pointer px-1 py-1 border-1 rounded-md hover:bg-white hover:text-black animation duration-200" id="user_info_cancel">cancel</button>
+                        <button type="submit" class="hidden w-fit cursor-pointer bg-emerald-400 text-white dark:bg-emerald-700 px-2 py-2 rounded-md hover:shadow-yellow-500  hover:bg-yellow-500 animation duration-200">submit</button>
+                    </div>
+                </form>
+                {% else %}
+                    <!-- Read Only version for other users. -->
+                    <div class="user-info bg-gradient-to-br from-blue-50 to-white dark:from-gray-800 dark:to-gray-900 p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-6 transition-all duration-300 hover:shadow-xl">
+
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 border-b border-gray-300 dark:border-gray-700 pb-2">
+                            User Information
+                        </h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <p class="text-gray-700 dark:text-gray-300">
+                                <strong class="font-semibold text-gray-900 dark:text-white">First Name:</strong>
+                                <span class="ml-2">{{ profile_user.first_name }}</span>
+                            </p>
+
+                            <p class="text-gray-700 dark:text-gray-300">
+                                <strong class="font-semibold text-gray-900 dark:text-white">Last Name:</strong>
+                                <span class="ml-2">{{ profile_user.last_name }}</span>
+                            </p>
+
+                            <p class="text-gray-700 dark:text-gray-300 break-words">
+                                <strong class="font-semibold text-gray-900 dark:text-white">Email:</strong>
+                                <span class="ml-2">{{ profile_user.email }}</span>
+                            </p>
+
+                            <p class="text-gray-700 dark:text-gray-300 col-span-1 sm:col-span-2">
+                                <strong class="font-semibold text-gray-900 dark:text-white">Bio:</strong>
+                                <span class="ml-2">{{ bio.bio }}</span>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div> 
+
+            <!-- User Info Section -->
+        </section>
+    </div>
+</div>
+
+<!-- Tab Switching Script -->
+<script>
+    const opt_bar_opts = document.querySelectorAll('.opt-bar > li')
+    const secs = document.querySelectorAll('.sec2 > div')
+
+    opt_bar_opts.forEach((opt, index) => {
+        opt.addEventListener('click', () => {
+            // Remove active tab style from all options
+            opt_bar_opts.forEach(o => o.classList.remove('border-b-2', 'border-blue-500'))
+            
+            // Add active style to clicked tab
+            opt.classList.add('border-b-2', 'border-blue-500')
+
+            // Hide all sections
+            secs.forEach(s => s.classList.add('hidden'))
+
+            // Show the clicked section
+            secs[index].classList.remove('hidden')
+        }) 
+    })
+
+
+    const inputs = document.querySelectorAll('.user_info_form input, .user_info_form textarea');
+    const user_info_btns = document.querySelectorAll('.user_info_form > div > button');
+    const user_info_cancel = document.querySelector('#user_info_cancel');
+
+    const toggleButtons = show => {
+        user_info_btns.forEach(btn => btn.classList.toggle('hidden', !show));
+    };
+
+    inputs.forEach(inp => {
+        inp.addEventListener('focus', () => toggleButtons(true));
+        inp.addEventListener('input', () => toggleButtons(true));
+    });
+
+    user_info_cancel.addEventListener('click', () => toggleButtons(false));
+
+
+    const profilePic = document.querySelector(".profpic");
+    const fileInput = document.getElementById("profileInput");
+
+    console.log(profilePic)
+    console.log(fileInput)
+    // Click on image triggers file input
+    profilePic.addEventListener("click", () => {
+        fileInput.click();
+        conosle.log("hello")
+    });
+
+    // Show preview when file is chosen
+    fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            profilePic.src = URL.createObjectURL(file);
+        }
+        fileInput.form.submit();
+    });
+</script>
+
+{% endblock %}

@@ -145,3 +145,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# default message tags for Tailwind styling
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded',
+    messages.SUCCESS: 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded',
+}

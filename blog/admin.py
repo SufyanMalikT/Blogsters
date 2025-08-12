@@ -5,3 +5,6 @@ from . import models
 
 admin.site.register(models.Blog)
 admin.site.register(models.Category)
+admin.site.register(models.Profile)
+admin.site.register(models.ProfilePic)
+admin.site.register(models.Messages)

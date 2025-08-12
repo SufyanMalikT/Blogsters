@@ -6,10 +6,12 @@
 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-16 shadow-lg"></div>
 
 <!-- Header -->
-{% include "blog/comps/tableheader.html" %}
+
 
 <!-- Blog Categories -->
 <div class="w-full px-4 py-6 bg-gray-50 dark:bg-gray-700">
+    <h1 class="text-black text-5xl font-bold dark:text-white">Popular Categories</h1>
+    <hr class="text-gray-700 dark:text-gray-200 my-4">
     <div class="max-w-7xl mx-auto flex flex-col gap-12">
 
         {% for blog_by_category in blogs_by_categories %}

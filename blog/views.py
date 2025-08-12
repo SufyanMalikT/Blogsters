@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Blog, Comment, Category
+from django.http import HttpResponseForbidden
+from .models import Blog, Comment, Category, ProfilePic, Profile, Messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import CommentForm
+from .forms import CommentForm, ProfilePicForm
 from django.db.models import Count
+from django.contrib import messages
 # Create your views here.
 
 
@@ -41,7 +43,7 @@ def blog_cat(request):
 
     # Fetch all categories and blogs
     categories = Category.objects.annotate(count_blogs=Count('blog_categories')).order_by('-count_blogs')[:5]
-    # blogs = Blog.objects.all()
+
 
     blogs_by_categories = []
 
@@ -52,15 +54,76 @@ def blog_cat(request):
         blogs_by_categories.append({'category':cat,'blogs':blogs_by_cat, 'blogs_chunk':blogs_by_cat_chunks})
 
 
-    # Group blogs by categories
-    # Create a list to hold the blogs grouped by category
     
-    # for category in categories:
-    #     list = []
-    #     for blog in blogs:
-    #         if blog.category == category:
-    #             list.append(blog)
-                
-    #     list2 = [list[i:i+3] for i in range(0,len(list),3)]
-    #     blogs_by_categories.append({'category':category,'blogs':list ,'blogs_chunk':list2})
+    
     return render(request,'blog/blogs_cat.html',{'blogs_by_categories':blogs_by_categories})
+
+
+def blog_profile(request, username):
+    # Fetch the user or return 404 if not found
+    profile_user = get_object_or_404(User, username=username)
+
+    # Get blogs (exact match on username)
+    blogs_by_author = Blog.objects.filter(author__username=username)
+
+    # Get optional profile picture & bio
+    profilepic = ProfilePic.objects.filter(user__username=username).first()
+    bio = Profile.objects.filter(user__username=username).first()
+
+    # For Users to update their profiles
+    if request.method == 'POST':
+        form = ProfilePicForm(request.POST, request.FILES)
+        if request.user != profile_user:
+            return HttpResponseForbidden('Only the owner of this profile will be able to edit his details.')
+        
+        if form.is_valid():
+            pfp = form.save(commit=False)
+            pfp.user = request.user
+            pfp.save()
+            return redirect('blog_profile',username=request.user.username)
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        email = request.POST.get('email', '')
+        bio_text = request.POST.get('bio', '')
+
+
+            
+        profile_user.first_name = first_name
+        profile_user.last_name = last_name
+        profile_user.email = email
+        profile_user.save()
+
+
+
+        bio_instance, created = Profile.objects.get_or_create(user=profile_user)
+        bio_instance.bio = bio_text
+        bio_instance.save()
+
+
+        return redirect('blog_profile',username=profile_user.username)
+    else:
+        form = ProfilePicForm()
+
+    print(getattr(profile_user,'profilepic',None))
+    # Render in one go — no branching needed
+    return render(request, 'blog/profile.html', {
+        'username': username,
+        'profile_user': profile_user,
+        'profilepic': profilepic,
+        'form':form,
+        'blogs_by_author': blogs_by_author if blogs_by_author.exists() else None,
+        'bio': bio
+    })
+
+
+def blog_contact(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        user_msg = Messages.objects.create(name=name,email=email,message=message)
+
+        messages.success(request, "Your message has been sent successfully!")
+        return redirect('blog_contact')
+    return render(request, 'blog/contact.html', {})

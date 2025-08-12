@@ -10,7 +10,7 @@ class Category(models.Model):
         return f"{self.name}"         
 class Blog(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True,blank=True)
+    slug = models.SlugField(max_length=255,unique=True,blank=True)
     author = models.ForeignKey(User,related_name='blog_posts',on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,3 +45,26 @@ class Comment(models.Model):
         
     def __str__(self):
         return f"Comment by {self.author.username} on {self.blog.title}"
+
+class Profile(models.Model):
+    bio = models.CharField(max_length=255, blank=True, null=True)
+    user = models.OneToOneField(User,related_name='user_profile',on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username}\'s profile'
+
+class ProfilePic(models.Model):
+    user = models.OneToOneField(User, related_name='profile_pic', on_delete=models.CASCADE)
+    img = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile Picture"
+
+
+class Messages(models.Model):
+    name = models.CharField(max_length=25)
+    email = models.EmailField()
+    message = models.TextField()
+
+    def __str__(self):
+        return f"{self.name}'s message."
